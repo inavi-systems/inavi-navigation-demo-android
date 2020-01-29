@@ -103,7 +103,7 @@ class PageMapAdapter(private var list: List<BasicListItem>) : RecyclerView.Adapt
     private fun processFunc(funcType: FuncMap, tvContents: TextView) {
         when(funcType) {
             FuncMap.CURRENTON -> {
-                INaviController.setCarCurrentPostion()
+                INaviController.setCarCurrentPosition()
 
                 //var curPos = INaviController.getCurrentPos()
                 //android.util.Log.e("curPos", " lat : " + curPos.lat + ", lon : " + curPos.lon +", a : " + curPos.angle)
@@ -195,7 +195,7 @@ class PageMapAdapter(private var list: List<BasicListItem>) : RecyclerView.Adapt
                 PageDataStore.overlayMap?.let {
                     PageDataStore.iconEx = INaviController.addMapIcon(it, mapIcon)
 
-                    INaviController.setMapPostion(markerLat, markerLon, 0.0)
+                    INaviController.setMapPosition(markerLat, markerLon, 0.0)
                 }
             }
             FuncMap.REMOVEMAPICON -> {

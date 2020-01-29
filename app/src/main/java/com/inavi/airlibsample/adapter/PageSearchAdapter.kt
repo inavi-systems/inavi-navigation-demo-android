@@ -193,7 +193,7 @@ class PageSearchAdapter(private var list: List<SearchListItem>, private var cont
                 holder.clRowMain.setOnClickListener {
                     if( item.dpLat <=0 || item.dpLon <=0)
                         return@setOnClickListener
-                    INaviController.setMapPostion(item.dpLat, item.dpLon, 0.0)
+                    INaviController.setMapPosition(item.dpLat, item.dpLon, 0.0)
 
                     if( PageDataStore.overlayRoute == null )
                         PageDataStore.overlayRoute = INaviController.createMapOverlay()
@@ -214,7 +214,7 @@ class PageSearchAdapter(private var list: List<SearchListItem>, private var cont
 
                     if( item.rpLat <=0 || item.rpLon <=0)
                         return@setOnClickListener
-                    INaviController.setMapPostion(item.rpLat, item.rpLon, 0.0)
+                    INaviController.setMapPosition(item.rpLat, item.rpLon, 0.0)
 
                     if( PageDataStore.overlayRoute == null )
                         PageDataStore.overlayRoute = INaviController.createMapOverlay()
