@@ -175,7 +175,7 @@ class MainActivity : AppCompatActivity() {
                 INaviController.setMapClickListener(mMapClickListener)
                 INaviController.setNaviEventListener(mNaviEventListener)
                 INaviController.setRouteChangedListener(mRouteChangedListener)
-                INaviController.setDrivingStatusListener(mDrivingStatusListener)
+                INaviController.setDrivingStatusListener(mDrivingStatusListener, 300)
                 INaviController.setMapMoveChangedListener(mMapMoveChangedListener)
 
                 /**
