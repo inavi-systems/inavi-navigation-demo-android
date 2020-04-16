@@ -139,7 +139,7 @@ class PageRouteAdapter(private var list: List<RouteListItem>, private var contex
                     //---------------------------------------------------------------------------------------------------
                     //멀티 탐색
 
-                    INaviController.runRoute(PageDataStore.startPoint, PageDataStore.goalPoint, object : OnRouteMultiListener {
+                    INaviController.runRoute(PageDataStore.startPoint, PageDataStore.goalPoint, null, object : OnRouteMultiListener {
                         override fun onSuccess(result: ArrayList<String>, same: Boolean) {
                             result?.let {
                                 INaviController.routeZoomMap(it, it[0])
@@ -167,7 +167,7 @@ class PageRouteAdapter(private var list: List<RouteListItem>, private var contex
                     //---------------------------------------------------------------------------------------------------
                     //단일 탐색
                     var optionType = ROUTEOPTIONTYPE.RECOMMEND
-                    INaviController.runSingleRoute(PageDataStore.startPoint, PageDataStore.goalPoint, optionType, object : OnRouteSingleListener {
+                    INaviController.runSingleRoute(PageDataStore.startPoint, PageDataStore.goalPoint, optionType, null, object : OnRouteSingleListener {
                         override fun onSuccess(result: String) {
 
                             PageDataStore.startPoint?.name = INaviController.getRoutePtInfo(result, ROUTEPTTYPE.START)?.name?: ""
