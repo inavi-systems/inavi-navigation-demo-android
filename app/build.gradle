@@ -49,7 +49,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
     //iNaviAir SDK 의존성 추가
-    implementation 'com.inavisys.navisdk:inavi-navigation-sdk:0.0.10'
+    implementation 'com.inavisys.navisdk:inavi-navigation-sdk:0.0.11'
     //SDK 가 사용하는 Library 추가
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
