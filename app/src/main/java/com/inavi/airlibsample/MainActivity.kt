@@ -166,7 +166,7 @@ class MainActivity : AppCompatActivity() {
          * @param uniqueID 유일 식별자 ( 휴대폰 번호 )
          * @param listener 결과 리턴 Callback
          */
-        val phoneNumber = ""
+        val phoneNumber = "UniqueID"
         INaviController.initalizeNavi(this, getRootPath(), phoneNumber, object : OnNaviInitListener {
             override fun onSuccess() {
                 mVpPager.visibility = View.VISIBLE
