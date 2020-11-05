@@ -55,6 +55,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
 
+        toggleControlView()
+        /*
         val dlgBuilder = AlertDialog.Builder(this)
         dlgBuilder.setTitle(getString(R.string.app_name)).setMessage("앱을 종료 하시겠습니까?")
 
@@ -69,8 +71,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         dlgBuilder.create()?.show()
+
+         */
     }
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         if( newConfig?.orientation == Configuration.ORIENTATION_PORTRAIT ) {
             ConstraintSet().let {
