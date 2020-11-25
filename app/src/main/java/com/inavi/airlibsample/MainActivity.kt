@@ -43,8 +43,7 @@ class MainActivity : AppCompatActivity() {
         initLayout()
         checkPermisson()
         
-        /** 하드웨어키에 대한 볼륨조정시 미디어볼륨이 되도록 설정*/
-        volumeControlStream = AudioManager.STREAM_MUSIC
+
     }
 
     override fun onDestroy() {
@@ -163,6 +162,12 @@ class MainActivity : AppCompatActivity() {
     private fun initNaviSDK() {
 
         //INaviController.forceHideMapComponent()
+
+
+        val streamType = AudioManager.STREAM_NOTIFICATION
+        /** 하드웨어키에 대한 볼륨조정시 미디어볼륨이 되도록 설정*/
+        volumeControlStream = streamType
+        INaviController.setAudioStreamType(streamType)
         /**
          * Navi SDK 초기화
          * @param context Application 시작 Context
