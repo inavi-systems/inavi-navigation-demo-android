@@ -164,6 +164,7 @@ class MainActivity : AppCompatActivity() {
         //INaviController.forceHideMapComponent()
 
 
+        INaviController.setMapStyle(MAPSTYLE.MAPBOX)
         val streamType = AudioManager.STREAM_NOTIFICATION
         /** 하드웨어키에 대한 볼륨조정시 미디어볼륨이 되도록 설정*/
         volumeControlStream = streamType
