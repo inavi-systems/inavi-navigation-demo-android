@@ -13,8 +13,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager.widget.ViewPager
 import com.inavi.airlibsample.adapter.PageDataStore
+import com.inavi.airlibsample.fragment.MapFragment
 import com.inaviair.sdk.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -28,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    private val isFragment = true
+
     private val requestCodePermission = 100
 
     private val mIntroEx: ConstraintLayout by lazy { clIntroEx }
@@ -40,8 +45,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initLayout()
-        checkPermisson()
+        if( isFragment ) {
+            //fragment로 실행시 "activity_main.xml"의 MapLayer, MapAdapter 는 주석 처리해야함
+            initLayoutFragment()
+        }
+        else {
+            initLayout()
+            checkPermisson()
+        }
         
 
     }
@@ -200,6 +211,28 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
         })
+    }
+
+    private var fragmentManager: FragmentManager? = null
+    private var mapFragment: MapFragment? = null
+    private var fragTransaction: FragmentTransaction?= null
+
+    private fun initLayoutFragment() {
+        mIntroEx.setOnClickListener { /* nothing */ }
+        mVpPager.adapter = NaviViewPagerAdapter(this, mHandler)
+
+        mapFragment = MapFragment(this)
+
+        fragmentManager = supportFragmentManager
+        fragTransaction = fragmentManager?.beginTransaction()
+        fragTransaction?.replace(R.id.clNaviMap, mapFragment!!)?.commitAllowingStateLoss();
+
+        //ex
+        INaviController.setApplicatonStatus(APPSTATUS.FOREGROUND)
+
+
+        mVpPager.visibility = View.VISIBLE
+        mIntroEx.visibility = View.GONE
     }
 
     private fun initLayout() {
