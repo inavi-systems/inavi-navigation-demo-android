@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/clControlView">
 
-        <!-- 지도 엔진 -->
+        <!--
         <com.inaviair.sdkEngine.MapAdapter
             android:id="@+id/mapAdapter"
             android:layout_width="match_parent"
@@ -25,13 +25,14 @@
             android:visibility="visible"
             />
 
-        <!-- 주행 화면 -->
+
         <com.inaviair.sdkEngine.MapLayer
             android:id="@+id/mapLayer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="visible"
             />
+            -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
