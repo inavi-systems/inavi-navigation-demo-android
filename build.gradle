@@ -20,7 +20,15 @@ allprojects {
         google()
         jcenter()
 
-        maven { url 'https://dl.bintray.com/inavi-systems/navigation/' }
+        //maven { url 'https://dl.bintray.com/inavi-systems/navigation/' }
+        maven {
+            url 'https://inavisystems.jfrog.io/artifactory/navigation/'
+            // private repo
+            //credentials {
+            //    username artifactoryId
+            //    password artifactoryKey
+            //}
+        }
     }
 }
 
