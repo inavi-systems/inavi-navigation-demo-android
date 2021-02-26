@@ -78,6 +78,7 @@ class MapFragment(private val acty: Activity) : Fragment() {
 
                 INaviController.setMapViewMode(MAPVIEWMODE.VIEWMODE_2D)
 
+                INaviController.setCarSpeedListener(mCarSpeedListener)
 
 
             }
@@ -96,5 +97,11 @@ class MapFragment(private val acty: Activity) : Fragment() {
             strStorageDir = fRootPath[0].absolutePath
 
         return strStorageDir
+    }
+
+    private val mCarSpeedListener = object : OnCarSpeedListener {
+        override fun onSpeed(speed: Int) {
+        }
+
     }
 }
