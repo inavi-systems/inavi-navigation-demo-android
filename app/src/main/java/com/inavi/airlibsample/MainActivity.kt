@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private val isFragment = true
+    private val isFragment = false
 
     private val requestCodePermission = 100
 

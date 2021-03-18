@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/clControlView">
 
-        <!--
+
         <com.inaviair.sdkEngine.MapAdapter
             android:id="@+id/mapAdapter"
             android:layout_width="match_parent"
@@ -32,7 +32,7 @@
             android:layout_height="match_parent"
             android:visibility="visible"
             />
-            -->
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
