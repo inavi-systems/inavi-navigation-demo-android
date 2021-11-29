@@ -139,7 +139,7 @@ class PageRouteAdapter(private var list: List<RouteListItem>, private var contex
                     //---------------------------------------------------------------------------------------------------
                     //멀티 탐색
 
-                    INaviController.runRoute(PageDataStore.startPoint, PageDataStore.goalPoint, null, null, object : OnRouteMultiListener {
+                    INaviController.runRoute(PageDataStore.startPoint, PageDataStore.goalPoint, null, null, null, object : OnRouteMultiListener {
                         override fun onSuccess(result: ArrayList<String>, same: Boolean) {
                             result?.let {
                                 INaviController.routeZoomMap(it, it[0])

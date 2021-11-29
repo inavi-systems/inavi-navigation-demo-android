@@ -194,6 +194,7 @@ class MainActivity : AppCompatActivity() {
                 mVpPager.visibility = View.VISIBLE
                 mIntroEx.visibility = View.GONE
 
+                INaviController.setMapRouteColor(MAPROUTECOLOR.TRAFFIC)
                 INaviController.setMapClickListener(mMapClickListener)
                 INaviController.setNaviEventListener(mNaviEventListener)
                 INaviController.setRouteChangedListener(mRouteChangedListener)
