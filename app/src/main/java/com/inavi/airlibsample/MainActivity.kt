@@ -366,8 +366,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 NAVIEVENTTYPE.MULTIMENU -> {
                     //하단 우측 버튼 이벤트
-                    toggleControlView()
+                    //toggleControlView()
                     Toast.makeText(this@MainActivity, "multi menu event", Toast.LENGTH_LONG).show()
+                    INaviController.drivingRouteZoomMap()
                 }
                 NAVIEVENTTYPE.EXITAPPLICATION -> {
                     //목적지 도착 하단바 "앱 종료" 이벤트
