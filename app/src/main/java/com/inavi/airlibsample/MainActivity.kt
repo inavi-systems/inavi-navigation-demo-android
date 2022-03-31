@@ -390,6 +390,8 @@ class MainActivity : AppCompatActivity() {
     private val mDrivingStatusListener = object : OnDrivingStatusListener {
         override fun onStatus(status: DRIVINGSTATUS) {
         }
+        override fun onArrivalFee(fee: Int) {
+        }
     }
     private val mMapMoveChangedListener = object : OnMapMoveChangedListener {
         override fun onStart() {
