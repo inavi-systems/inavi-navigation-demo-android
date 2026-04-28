@@ -14,14 +14,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.inavi.airlibsample.R
 import com.inaviair.sdk.*
-import kotlinx.android.synthetic.main.row_contents_multi_button.view.*
-import kotlinx.android.synthetic.main.row_contents_route.view.*
-import kotlinx.android.synthetic.main.row_contents_routeinfo.view.*
-import kotlinx.android.synthetic.main.row_header.view.*
-
-/**
- * Created by J.W. Park on 2019-10-21
- */
 
 enum class RouteCode(val value: Int) {
     INIT(0),
@@ -31,43 +23,93 @@ enum class RouteCode(val value: Int) {
 
 abstract class RouteListItemHolder(view: View): RecyclerView.ViewHolder(view)
 class RouteListItemHolderHeader(view: LinearLayout): RouteListItemHolder(view) {
-    var tvTitle: TextView = view.tvRowTitle
+    val tvTitle: TextView by lazy{
+        view.findViewById(R.id.tvRowTitle)
+    }
 }
 class RouteListItemHolderRoute(view: ConstraintLayout): RouteListItemHolder(view) {
-    var tvStartName: TextView = view.tvStartName
-    var tvGoalName: TextView = view.tvGoalName
-    var btnRoute: Button = view.btnRoute
+    val tvStartName: TextView by lazy{
+        view.findViewById(R.id.tvStartName)
+    }
+    val tvGoalName: TextView by lazy{
+        view.findViewById(R.id.tvGoalName)
+    }
+    val btnRoute: Button by lazy{
+        view.findViewById(R.id.btnRoute)
+    }
 }
 
 class RouteListItemHolderItem(view: ConstraintLayout): RouteListItemHolder(view) {
-    var clRouteInfo1: ConstraintLayout = view.clRouteInfo1
-    var tvOptionName1: TextView = view.tvOptionName1
-    var tvDist1: TextView = view.tvDist1
-    var tvTime1: TextView = view.tvTime1
-    var tvFee1: TextView = view.tvFee1
+    val clRouteInfo1: ConstraintLayout by lazy{
+        view.findViewById(R.id.clRouteInfo1)
+    }
+    val tvOptionName1: TextView by lazy{
+        view.findViewById(R.id.tvOptionName1)
+    }
+    val tvDist1: TextView by lazy{
+        view.findViewById(R.id.tvDist1)
+    }
+    val tvTime1: TextView by lazy{
+        view.findViewById(R.id.tvTime1)
+    }
+    val tvFee1: TextView by lazy{
+        view.findViewById(R.id.tvFee1)
+    }
 
-    var clRouteInfo2: ConstraintLayout = view.clRouteInfo2
-    var tvOptionName2: TextView = view.tvOptionName2
-    var tvDist2: TextView = view.tvDist2
-    var tvTime2: TextView = view.tvTime2
-    var tvFee2: TextView = view.tvFee2
+    val clRouteInfo2: ConstraintLayout by lazy{
+        view.findViewById(R.id.clRouteInfo2)
+    }
+    val tvOptionName2: TextView by lazy{
+        view.findViewById(R.id.tvOptionName2)
+    }
+    val tvDist2: TextView by lazy{
+        view.findViewById(R.id.tvDist2)
+    }
+    val tvTime2: TextView by lazy{
+        view.findViewById(R.id.tvTime2)
+    }
+    val tvFee2: TextView by lazy{
+        view.findViewById(R.id.tvFee2)
+    }
 
-    var clRouteInfo3: ConstraintLayout = view.clRouteInfo3
-    var tvOptionName3: TextView = view.tvOptionName3
-    var tvDist3: TextView = view.tvDist3
-    var tvTime3: TextView = view.tvTime3
-    var tvFee3: TextView = view.tvFee3
+    val clRouteInfo3: ConstraintLayout by lazy{
+        view.findViewById(R.id.clRouteInfo3)
+    }
+    val tvOptionName3: TextView by lazy{
+        view.findViewById(R.id.tvOptionName3)
+    }
+    val tvDist3: TextView by lazy{
+        view.findViewById(R.id.tvDist3)
+    }
+    val tvTime3: TextView by lazy{
+        view.findViewById(R.id.tvTime3)
+    }
+    val tvFee3: TextView by lazy{
+        view.findViewById(R.id.tvFee3)
+    }
 }
 class RouteListItemHolderGuide(view: ConstraintLayout): RouteListItemHolder(view) {
-    var btnCancel: Button = view.btnLeft
-    var btnSimul: Button = view.btnCenter
-    var btnGuide: Button = view.btnRight
+    val btnCancel: Button by lazy{
+        view.findViewById(R.id.btnLeft)
+    }
+    val btnSimul: Button by lazy{
+        view.findViewById(R.id.btnCenter)
+    }
+    val btnGuide: Button by lazy{
+        view.findViewById(R.id.btnRight)
+    }
 
 }
 class RouteListItemHolderCancel(view: ConstraintLayout): RouteListItemHolder(view) {
-    var btnCancel: Button = view.btnLeft
-    var btnCenter: Button = view.btnCenter
-    var btnRight: Button = view.btnRight
+    val btnCancel: Button by lazy{
+        view.findViewById(R.id.btnLeft)
+    }
+    val btnCenter: Button by lazy{
+        view.findViewById(R.id.btnCenter)
+    }
+    val btnRight: Button by lazy{
+        view.findViewById(R.id.btnRight)
+    }
 }
 
 
@@ -119,12 +161,13 @@ class PageRouteAdapter(private var list: List<RouteListItem>, private var contex
                 val item = list.getOrNull(position) ?: return
                 holder.tvTitle.text = item.mainText
             }
+
             RouteListType.ROUTE.value -> {
+
                 if (holder !is RouteListItemHolderRoute) return
 
-
-                holder.tvStartName.text = "출발지 : ${PageDataStore.startPoint?.name}"
-                holder.tvGoalName.text = "목적지 : ${PageDataStore.goalPoint?.name}"
+                holder.tvStartName.text = "출발지 : ${PageDataStore.startPoint.name}"
+                holder.tvGoalName.text = "목적지 : ${PageDataStore.goalPoint.name}"
 
 
                 holder.btnRoute.setOnClickListener {
@@ -135,60 +178,43 @@ class PageRouteAdapter(private var list: List<RouteListItem>, private var contex
                     holder.tvGoalName.text = "경로 탐색 진행 중입니다."
 
 
+                    PageDataStore.startPoint.angle = 0
 
-                    //---------------------------------------------------------------------------------------------------
-                    //멀티 탐색
-
-                    INaviController.runRoute(PageDataStore.startPoint, PageDataStore.goalPoint, null, null, null, object : OnRouteMultiListener {
+                    var viaList = PageDataStore.viaPoints
+                    val optionType = mutableListOf<ROUTEOPTIONTYPE>()
+                    optionType.add(ROUTEOPTIONTYPE.TRUCK)
+                    optionType.add(ROUTEOPTIONTYPE.TRUCK2)
+                    INaviController.runRoute(PageDataStore.startPoint, PageDataStore.goalPoint, viaList, optionType,null, object : OnRouteMultiListener {
                         override fun onSuccess(result: ArrayList<String>, same: Boolean) {
-                            result?.let {
+                            result.let {
                                 INaviController.routeZoomMap(it, it[0])
 
-                                PageDataStore.startPoint?.name = INaviController.getRoutePtInfo(it[0], ROUTEPTTYPE.START)?.name?: ""
-                                PageDataStore.goalPoint?.name = INaviController.getRoutePtInfo(it[0], ROUTEPTTYPE.GOAL)?.name?: ""
+                                PageDataStore.startPoint.name = INaviController.getRoutePtInfo(it[0], ROUTEPTTYPE.START)?.name?: ""
+                                PageDataStore.startPoint.dpLon = INaviController.getRoutePtInfo(it[0], ROUTEPTTYPE.START)?.rpLon?: 0.0
+                                PageDataStore.startPoint.dpLat = INaviController.getRoutePtInfo(it[0], ROUTEPTTYPE.START)?.rpLat?: 0.0
+                                PageDataStore.goalPoint.name = INaviController.getRoutePtInfo(it[0], ROUTEPTTYPE.GOAL)?.name?: ""
                             }
 
                             PageDataStore.routeResult = result
-
-                            mHandler.sendEmptyMessage(RouteCode.ROUTESUM.value)
-                            mRouteIng = false
-                        }
-                        override fun onFail(errCode: Int, msg: String) {
-                            holder.tvStartName.text = "탐색 실패 (code : $errCode)"
-                            holder.tvGoalName.text = msg
-
-                            PageDataStore.routeResult = null
-                            mRouteIng = false
-                        }
-                    })
-
-
-                    /*
-                    //---------------------------------------------------------------------------------------------------
-                    //단일 탐색
-                    var optionType = ROUTEOPTIONTYPE.RECOMMEND
-                    INaviController.runSingleRoute(PageDataStore.startPoint, PageDataStore.goalPoint, optionType, null, object : OnRouteSingleListener {
-                        override fun onSuccess(result: String) {
-
-                            PageDataStore.startPoint?.name = INaviController.getRoutePtInfo(result, ROUTEPTTYPE.START)?.name?: ""
-                            PageDataStore.goalPoint?.name = INaviController.getRoutePtInfo(result, ROUTEPTTYPE.GOAL)?.name?: ""
-
-                            PageDataStore.routeResult = arrayListOf()
-                            PageDataStore.routeResult?.add(result)
-                            PageDataStore.selectedRCIndex = 0
-
-                            INaviController.routeZoomMap(PageDataStore.routeResult, result)
-
                             mHandler.sendEmptyMessage(RouteCode.ROUTESUM.value)
                             mRouteIng = false
 
-                            var strJson = INaviController.getRouteLinePoints(result)
-                            /*
-                            var size = strJson?.length()?: 0
-                            for( i in 0 until size ) {
-                                android.util.Log.e("strjson", "json ${strJson?.get(i).toString()}")
+                            if( PageDataStore.overlayRoute == null )
+                                PageDataStore.overlayRoute = INaviController.createMapOverlay()
+
+                            PageDataStore.overlayRoute?.let { overlay ->
+                                INaviController.removeMapIconALL(overlay)
+
+                                var markerGoalIcon = INaviController.createMapIcon(
+                                    PageDataStore.startPoint.dpLat,
+                                    PageDataStore.startPoint.dpLon,
+                                    R.drawable.icon_sample_start,
+                                    ICONGRAVITY.CENTER_TOP
+                                )?: return
+
+                                INaviController.addMapIcon(overlay, markerGoalIcon)
+
                             }
-                            */
                         }
                         override fun onFail(errCode: Int, msg: String) {
                             holder.tvStartName.text = "탐색 실패 (code : $errCode)"
@@ -197,10 +223,7 @@ class PageRouteAdapter(private var list: List<RouteListItem>, private var contex
                             PageDataStore.routeResult = null
                             mRouteIng = false
                         }
-
                     })
-                    //---------------------------------------------------------------------------------------------------
-                    */
                 }
             }
             RouteListType.RESULT.value -> {
@@ -227,9 +250,7 @@ class PageRouteAdapter(private var list: List<RouteListItem>, private var contex
                         holder.clRouteInfo2.isSelected = false
                         holder.clRouteInfo3.isSelected = false
                         PageDataStore.selectedRCIndex = 0
-
                         INaviController.routeZoomMap(PageDataStore.routeResult, PageDataStore.getSelectedRID()?:"")
-
                     }
                 }
 
@@ -252,8 +273,8 @@ class PageRouteAdapter(private var list: List<RouteListItem>, private var contex
                         holder.clRouteInfo2.isSelected = true
                         holder.clRouteInfo3.isSelected = false
                         PageDataStore.selectedRCIndex = 1
-
-                        INaviController.routeZoomMap(PageDataStore.routeResult, PageDataStore.getSelectedRID()?:"")
+                        INaviController.routeZoomMapWithPadding(PageDataStore.routeResult, PageDataStore.getSelectedRID()?:"",
+                            android.graphics.RectF(0f,0f,0f,60f))
                     }
                 }
 
@@ -276,12 +297,11 @@ class PageRouteAdapter(private var list: List<RouteListItem>, private var contex
                         holder.clRouteInfo2.isSelected = false
                         holder.clRouteInfo3.isSelected = true
                         PageDataStore.selectedRCIndex = 2
-
                         INaviController.routeZoomMap(PageDataStore.routeResult, PageDataStore.getSelectedRID()?:"")
                     }
                 }
-
             }
+
             RouteListType.GUIDANCE.value -> {
                 if (holder !is RouteListItemHolderGuide) return
 
@@ -308,8 +328,6 @@ class PageRouteAdapter(private var list: List<RouteListItem>, private var contex
                     }
                     mHandler.sendEmptyMessage(RouteCode.GUIDE.value)
                 }
-
-
             }
 
             RouteListType.ROUTECANCEL.value -> {
@@ -321,14 +339,16 @@ class PageRouteAdapter(private var list: List<RouteListItem>, private var contex
                 holder.btnCancel.setOnClickListener {
                     if(isSimul)
                         INaviController.finishSimulation()
-                    else
-                        INaviController.cancelRoute()
+
+                    INaviController.cancelRoute()
 
                     mHandler.sendEmptyMessage(RouteCode.INIT.value)
+
                 }
 
                 holder.btnCenter.visibility = View.GONE
                 holder.btnRight.visibility = View.GONE
+
             }
             else -> {
                 if (holder !is RouteListItemHolderHeader) return
@@ -342,33 +362,31 @@ class PageRouteAdapter(private var list: List<RouteListItem>, private var contex
         notifyDataSetChanged()
     }
 
-
     private val mHandler = object: Handler(Looper.getMainLooper()) {
-        override fun handleMessage(msg: Message?) {
-            //super.handleMessage(msg)
-            msg?: return
-
+        override fun handleMessage(msg: Message) {
             when(msg.what) {
                 RouteCode.INIT.value -> {
                     var listItems = mutableListOf<RouteListItem>()
                     listItems.add(RouteListItem(RouteListType.HEADER, PageTitle.ROUTE.value))
                     listItems.add(RouteListItem(RouteListType.ROUTE, ""))
                     updateList(listItems)
-
+                    PageDataStore.overlayRoute?.let { overlay ->
+                        INaviController.removeMapIconALL(overlay)
+                    }
                 }
+
                 RouteCode.ROUTESUM.value -> {
 
                     var ridList = PageDataStore.routeResult ?: return
-                    var rCoreInfo = ridList?.map {
+                    var rCoreInfo = ridList.map {
                         INaviController.makeRouteSumInfo(it)
                     }.toTypedArray()
-
 
                     var listItems = mutableListOf<RouteListItem>()
                     listItems.add(RouteListItem(RouteListType.HEADER, PageTitle.ROUTE.value))
                     listItems.add(RouteListItem(RouteListType.ROUTE, ""))
 
-                    var routeCount = rCoreInfo?.size?: 0
+                    var routeCount = rCoreInfo.size
                     var addItem = when(routeCount) {
                         1 -> {
                             RouteListItem(RouteListType.RESULT, "",
@@ -398,15 +416,15 @@ class PageRouteAdapter(private var list: List<RouteListItem>, private var contex
                     listItems.add(RouteListItem(RouteListType.GUIDANCE))
 
                     updateList(listItems)
+
                 }
+
                 RouteCode.GUIDE.value -> {
                     var listItems = mutableListOf<RouteListItem>()
                     listItems.add(RouteListItem(RouteListType.HEADER, PageTitle.ROUTE.value))
                     listItems.add(RouteListItem(RouteListType.ROUTECANCEL, ""))
                     updateList(listItems)
                 }
-
-
             }
         }
     }

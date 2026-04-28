@@ -9,13 +9,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.inavi.airlibsample.R
 import com.inaviair.sdk.*
-import kotlinx.android.synthetic.main.row_contents_basic.view.*
-import kotlinx.android.synthetic.main.row_header.view.*
-
-/**
- * Created by J.W. Park on 2019-10-14
- */
-
 
 enum class FuncMap(val value: Int) {
     NONE(0),
@@ -29,25 +22,32 @@ enum class FuncMap(val value: Int) {
     REMOVEMAPICON(8),
     TRAFFICON(9),
     ENABLEROTATE(10),
-    MAX(11)
+    ROUTELINEPOINTS(11),
+    APTCOLLISIONIGNORE(12),
+    MAX(13)
 
 }
 
 abstract class MapListItemHolder(view: View): RecyclerView.ViewHolder(view)
 class MapListItemHolderHeader(view: LinearLayout): MapListItemHolder(view) {
-    var tvTitle: TextView = view.tvRowTitle
+    val tvTitle: TextView by lazy{
+        view.findViewById(R.id.tvRowTitle)
+    }
 }
+
 class MapListItemHolderItem(view: ConstraintLayout): MapListItemHolder(view) {
-    var clRowMain: ConstraintLayout = view.clRowMain
-    var tvContents: TextView = view.tvContents
+    val clRowMain: ConstraintLayout by lazy{
+        view.findViewById(R.id.clRowMain)
+    }
+    val tvContents: TextView by lazy{
+        view.findViewById(R.id.tvContents)
+    }
 }
 
 class PageMapAdapter(private var list: List<BasicListItem>) : RecyclerView.Adapter<MapListItemHolder>() {
 
     private var mTrafficOn = false
     private var mEnableRotate = true
-    //private var mMapOverlay: MapOverlay? = null
-    //private var mMapIcon: MapIcon? = null
 
     override fun getItemCount(): Int {
         return list.size
@@ -94,9 +94,42 @@ class PageMapAdapter(private var list: List<BasicListItem>) : RecyclerView.Adapt
             else -> {
                 if (holder !is MapListItemHolderHeader) return
 
-                //val item = list.getOrNull(position) ?: return
                 holder.tvTitle.visibility = View.GONE
             }
+        }
+    }
+
+
+    private fun addAllRoutePointMarker(){
+        PageDataStore.getSelectedRID()?.let {
+            var routeLinePoints = INaviController.getRouteLinePoints(it)
+            for (i in 0 until routeLinePoints!!.length()) {
+                val item = routeLinePoints.getJSONObject(i)
+
+                val nextPointLonX = item.getDouble("lon")
+                val nextPointLatY = item.getDouble("lat")
+
+                val mapIcon = INaviController.createMapIcon(
+                    nextPointLatY,
+                    nextPointLonX,
+                    R.drawable.icon_sample_normal,
+                    R.drawable.icon_sample_normal,
+                    ICONGRAVITY.CENTER,
+                    0,
+                    14,
+                    true
+                )?: return
+
+                PageDataStore.iconEx?.let { mIcon ->
+                    if(mIcon.compare(mapIcon))
+                        return
+                }
+
+                PageDataStore.overlayRoute?.let { overlay ->
+                    PageDataStore.iconEx = INaviController.addMapIcon(overlay, mapIcon)
+                }
+            }
+
         }
     }
 
@@ -104,9 +137,6 @@ class PageMapAdapter(private var list: List<BasicListItem>) : RecyclerView.Adapt
         when(funcType) {
             FuncMap.CURRENTON -> {
                 INaviController.setCarCurrentPosition()
-
-                //var curPos = INaviController.getCurrentPos()
-                //android.util.Log.e("curPos", " lat : " + curPos.lat + ", lon : " + curPos.lon +", a : " + curPos.angle)
             }
             FuncMap.VIEWMODE -> {
 
@@ -162,23 +192,12 @@ class PageMapAdapter(private var list: List<BasicListItem>) : RecyclerView.Adapt
                     PageDataStore.overlayMap?.setSelect(it, !it.isSelected, false, true)
                 }
 
-
-                /** ICONGRAVITY */
-
-                // CENTER : 이미지의 정중앙이 map icon 좌표 위치
-                // CENTER_TOP : 이미지의 정중앙 하단이 map icon 좌표 위치
-                // LEFT_TOP : 이미지의 우측하단 좌표가 map icon 좌표 위치 (출력은 이미지가 좌표 기준 좌상단에 출력)
-                // RIGHT_TOP : 이미지의 좌측하단 좌표가 map icon 좌표 위치 (출력은 이미지가 좌표 기준 우상단에 출력)
-                // LEFT_BOTTOM : 이미지의 우측상단 좌표가 map icon 좌표 위치 (출력은 이미지가 좌표 기준 좌하단에 출력)
-                // RIGHT_BOTTOM : 이미지의 좌측상단 좌표가 map icon 좌표 위치 (출력은 이미지가 좌표 기준 우하단에 출력)
-
-
-                var markerLat = 37.402333
-                var markerLon = 127.110589
+                val markerLat = 37.402333
+                val markerLon = 127.110589
 
                 val mapIcon = INaviController.createMapIcon(
-                    markerLat, //위도(lat)
-                    markerLon, //경도(lon)
+                    markerLat,
+                    markerLon,
                     R.drawable.icon_sample_oil_sample,
                     R.drawable.icon_sample_oil_sample_s,
                     ICONGRAVITY.RIGHT_TOP,
@@ -205,9 +224,17 @@ class PageMapAdapter(private var list: List<BasicListItem>) : RecyclerView.Adapt
                     }
                     INaviController.removeMapOverlay(overlay)
                 }
-
+                PageDataStore.overlayRoute?.let {
+                    INaviController.removeMapIconALL(it)
+                }
                 PageDataStore.overlayMap = null
+                PageDataStore.overlayRoute = null
                 PageDataStore.iconEx = null
+                PageDataStore.mapIconGoal = null
+                PageDataStore.mapIconPin = null
+                PageDataStore.startPoint = RoutePtItem()
+                PageDataStore.goalPoint = RoutePtItem()
+                PageDataStore.viaPoints = mutableListOf<RoutePtItem>()
 
             }
             FuncMap.TRAFFICON -> {
@@ -223,6 +250,15 @@ class PageMapAdapter(private var list: List<BasicListItem>) : RecyclerView.Adapt
                 else
                     tvContents.text = "지도 회전 세팅 : 회전 불가"
             }
+            FuncMap.ROUTELINEPOINTS -> {
+                addAllRoutePointMarker()
+            }
+
+            FuncMap.APTCOLLISIONIGNORE -> {
+                INaviController.setAptPoiCollisionIgnored(true)
+            }
+
+            else -> {}
         }
     }
 }

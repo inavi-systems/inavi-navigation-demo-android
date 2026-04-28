@@ -1,19 +1,25 @@
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 
 android {
-    compileSdkVersion 28
+    namespace = 'com.inavi.airlibsample'
+
+    buildFeatures {
+        buildConfig = true
+        viewBinding = true
+    }
+
+    compileSdkVersion 33
     defaultConfig {
         applicationId "com.inavi.airlibsample"
-        minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 9
+        minSdkVersion 23
+        targetSdkVersion 33
+        versionCode 10
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        multiDexEnabled true
         ndk {
             abiFilters "arm64-v8a", "armeabi-v7a"
         }
@@ -35,6 +41,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
@@ -49,10 +58,10 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
-    //iNaviAir SDK 의존성 추가
-    implementation 'com.inavisys.navisdk:inavi-navigation-sdk:0.0.27'
-    //SDK 가 사용하는 Library 추가
+    // iNaviAir SDK 의존성 추가
+    implementation 'com.inavisys.navisdk:inavi-navigation-sdk:0.9.1'
+    // SDK 가 사용하는 Library 추가
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.google.android.gms:play-services-location:16.0.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
     
 }
