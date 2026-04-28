@@ -14,5 +14,6 @@
 .cxx
 .idea
 node_modules
+docs/plans
 docs/.vitepress/cache
 docs/.vitepress/dist
