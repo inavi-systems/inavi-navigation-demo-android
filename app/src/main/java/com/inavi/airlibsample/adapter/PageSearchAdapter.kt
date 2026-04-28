@@ -18,15 +18,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.inavi.airlibsample.R
 import com.inaviair.sdk.*
-import kotlinx.android.synthetic.main.row_contents_basic.view.clRowMain
-import kotlinx.android.synthetic.main.row_contents_basic.view.tvContents
-import kotlinx.android.synthetic.main.row_contents_search.view.*
-import kotlinx.android.synthetic.main.row_header.view.*
-import kotlinx.android.synthetic.main.row_query_input.view.*
-
-/**
- * Created by J.W. Park on 2019-10-16
- */
 
 enum class SearchCode(val value: Int) {
     SUCCESS(0),
@@ -38,31 +29,30 @@ enum class SearchCode(val value: Int) {
 
 abstract class SearchListItemHolder(view: View): RecyclerView.ViewHolder(view)
 class SearchListItemHolderHeader(view: LinearLayout): SearchListItemHolder(view) {
-    var tvTitle: TextView = view.tvRowTitle
+    var tvTitle: TextView = view.findViewById(R.id.tvRowTitle)
 }
+
 class SearchListItemHolderQuery(view: ConstraintLayout): SearchListItemHolder(view) {
-    var etKeyword: EditText = view.etKeyword
-    var btnSearch: Button = view.btnSearch
+    var etKeyword: EditText = view.findViewById(R.id.etKeyword)
+    var btnSearch: Button = view.findViewById(R.id.btnSearch)
 }
+
 class SearchListItemHolderItem(view: ConstraintLayout): SearchListItemHolder(view) {
-    var clRowMain: ConstraintLayout = view.clRowMain
-    var tvContents: TextView = view.tvContents
-    var tvSubContents: TextView = view.tvSubContents
-    var tvSubSubContents: TextView = view.tvSubSubContents
-    var btnGoal: Button = view.btnGoal
+    var clRowMain: ConstraintLayout = view.findViewById(R.id.clRowMain)
+    var tvContents: TextView = view.findViewById(R.id.tvContents)
+    var tvSubContents: TextView = view.findViewById(R.id.tvSubContents)
+    var tvSubSubContents: TextView = view.findViewById(R.id.tvSubSubContents)
+    var btnGoal: Button = view.findViewById(R.id.btnGoal)
 }
+
 class SearchListItemHolderRecommend(view: ConstraintLayout): SearchListItemHolder(view) {
-    var clRowMain: ConstraintLayout = view.clRowMain
-    var tvContents: TextView = view.tvContents
+    var clRowMain: ConstraintLayout = view.findViewById(R.id.clRowMain)
+    var tvContents: TextView = view.findViewById(R.id.tvContents)
 }
 
 class PageSearchAdapter(private var list: List<SearchListItem>, private var context: Context, private var handler: Handler) : RecyclerView.Adapter<SearchListItemHolder>() {
 
-
-    //private var mMapOverlay: MapOverlay? = null
-    //private var mMapIcon: MapIcon? = null
-
-    private var mLastQurety = ""
+    private var mLastQuery = ""
     private var mSearchIng = false
     override fun getItemCount(): Int {
         return list.size
@@ -73,22 +63,27 @@ class PageSearchAdapter(private var list: List<SearchListItem>, private var cont
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchListItemHolder {
         return when(viewType){
+
             SearchListType.HEADER.value -> {
                 val cell = LayoutInflater.from(parent.context).inflate(R.layout.row_header, parent, false) as LinearLayout
                 SearchListItemHolderHeader(cell)
             }
+
             SearchListType.QUERY.value -> {
                 val cell = LayoutInflater.from(parent.context).inflate(R.layout.row_query_input, parent, false) as ConstraintLayout
                 SearchListItemHolderQuery(cell)
             }
+
             SearchListType.RESULT.value -> {
                 val cell = LayoutInflater.from(parent.context).inflate(R.layout.row_contents_search, parent, false) as ConstraintLayout
                 SearchListItemHolderItem(cell)
             }
+
             SearchListType.RECOMMEND.value -> {
                 val cell = LayoutInflater.from(parent.context).inflate(R.layout.row_contents_basic, parent, false) as ConstraintLayout
                 SearchListItemHolderRecommend(cell)
             }
+
             else -> {
                 val cell = LayoutInflater.from(parent.context).inflate(R.layout.row_header, parent, false) as LinearLayout
                 SearchListItemHolderHeader(cell)
@@ -103,10 +98,11 @@ class PageSearchAdapter(private var list: List<SearchListItem>, private var cont
                 val item = list.getOrNull(position) ?: return
                 holder.tvTitle.text = item.mainText
             }
+
             SearchListType.QUERY.value -> {
                 if (holder !is SearchListItemHolderQuery) return
-
                 val item = list.getOrNull(position) ?: return
+
                 if( !item.mainText.isNullOrEmpty() ) {
                     holder.etKeyword.setText(item.mainText)
                     holder.etKeyword.selectAll()
@@ -123,12 +119,11 @@ class PageSearchAdapter(private var list: List<SearchListItem>, private var cont
 
                         var query = s?.toString()?: return
 
-                        if( mLastQurety.equals(query, true)) return
+                        if( mLastQuery.equals(query, true)) return
                         if( query.equals("검색중입니다.", true)) return
 
                         INaviController.runRecommendWord(query, object: OnRecommendWordListener {
                             override fun onSuccess(result: ArrayList<RecommendWord>) {
-
                                 var msg = Message.obtain()
                                 msg.what = SearchCode.RECOMMEND.value
                                 msg.obj = result
@@ -146,8 +141,6 @@ class PageSearchAdapter(private var list: List<SearchListItem>, private var cont
 
                 })
 
-
-
                 holder.btnSearch.setOnClickListener {
                     if( mSearchIng ) return@setOnClickListener
 
@@ -161,8 +154,9 @@ class PageSearchAdapter(private var list: List<SearchListItem>, private var cont
                         imm.hideSoftInputFromWindow(holder.etKeyword.windowToken, 0)
                     }
 
-                    mLastQurety = query
+                    mLastQuery = query
                     var curLoc = INaviController.getCurrentPos()
+
                     INaviController.runSearch(query, curLoc.lat, curLoc.lon, object : OnSearchListener{
                         override fun onSuccess(result: SearchResult) {
                             var msg = Message.obtain()
@@ -191,6 +185,7 @@ class PageSearchAdapter(private var list: List<SearchListItem>, private var cont
                 holder.tvSubSubContents.text = item.subSubText
 
                 holder.clRowMain.setOnClickListener {
+
                     if( item.dpLat <=0 || item.dpLon <=0)
                         return@setOnClickListener
                     INaviController.setMapPosition(item.dpLat, item.dpLon, 0.0)
@@ -203,13 +198,14 @@ class PageSearchAdapter(private var list: List<SearchListItem>, private var cont
                             INaviController.removeMapIcon(overlay, prevIcon)
                         }
                     }
+
                     var markerIcon = INaviController.createMapIcon(item.dpLat, item.dpLon, R.drawable.icon_sample_normal, ICONGRAVITY.CENTER_TOP)?: return@setOnClickListener
 
                     PageDataStore.overlayRoute?.let { overlay ->
                         PageDataStore.mapIconPin = INaviController.addMapIcon(overlay, markerIcon)
                     }
-
                 }
+
                 holder.btnGoal.setOnClickListener {
 
                     if( item.rpLat <=0 || item.rpLon <=0)
@@ -226,10 +222,7 @@ class PageSearchAdapter(private var list: List<SearchListItem>, private var cont
                         PageDataStore.mapIconPin?.let { prevPinIcon ->
                             INaviController.removeMapIcon(overlay, prevPinIcon)
                         }
-
-                        //INaviController.removeMapIconALL(overlay)
                     }
-
 
                     var goalIcon = INaviController.createMapIcon(item.rpLat, item.rpLon, R.drawable.icon_sample_goal, ICONGRAVITY.CENTER_TOP)?: return@setOnClickListener
 
@@ -237,11 +230,12 @@ class PageSearchAdapter(private var list: List<SearchListItem>, private var cont
                         PageDataStore.mapIconGoal = INaviController.addMapIcon(overlay, goalIcon)
                     }
 
-                    PageDataStore.goalPoint = RoutePtItem(item.mainText, item.rpLat, item.rpLon, item.dpLat, item.dpLon)
+                    PageDataStore.goalPoint = RoutePtItem(item.mainText, item.rpLat, item.rpLon, item.dpLat, item.dpLon, 0)
 
-                    handler.sendEmptyMessage(2)//탐색 페이지로 이동
+                    handler.sendEmptyMessage(2)
                 }
             }
+
             SearchListType.RECOMMEND.value -> {
                 if (holder !is SearchListItemHolderRecommend) return
 
@@ -270,11 +264,9 @@ class PageSearchAdapter(private var list: List<SearchListItem>, private var cont
 
 
     private val mHandler = object: Handler(Looper.getMainLooper()) {
-        override fun handleMessage(msg: Message?) {
-            //super.handleMessage(msg)
-            msg?: return
-
+        override fun handleMessage(msg: Message) {
             when(msg.what) {
+
                 SearchCode.SUCCESS.value -> {
                     var listItems = mutableListOf<SearchListItem>()
                     listItems.add(SearchListItem(SearchListType.HEADER, PageTitle.SEARCH.value))
@@ -287,6 +279,7 @@ class PageSearchAdapter(private var list: List<SearchListItem>, private var cont
                     }
                     updateList(listItems)
                 }
+
                 SearchCode.FAIL.value -> {
                     var listItems = mutableListOf<SearchListItem>()
                     listItems.add(SearchListItem(SearchListType.HEADER, PageTitle.SEARCH.value))
@@ -300,7 +293,9 @@ class PageSearchAdapter(private var list: List<SearchListItem>, private var cont
                     var listItems = mutableListOf<SearchListItem>()
                     listItems.add(SearchListItem(SearchListType.HEADER, PageTitle.SEARCH.value))
                     listItems.add(SearchListItem(SearchListType.QUERY, ""))
-                    var recList = msg.obj as ArrayList<RecommendWord>
+                    val recList = (msg.obj as? List<*>)
+                        ?.filterIsInstance<RecommendWord>()
+                        ?: return
                     recList.forEach {
                         listItems.add(SearchListItem(SearchListType.RECOMMEND, it.recommendWord))
                     }
@@ -313,14 +308,13 @@ class PageSearchAdapter(private var list: List<SearchListItem>, private var cont
                     listItems.add(SearchListItem(SearchListType.QUERY, ""))
                     updateList(listItems)
                 }
+
                 SearchCode.RECOMMENDSELECT.value -> {
                     var listItems = mutableListOf<SearchListItem>()
                     listItems.add(SearchListItem(SearchListType.HEADER, PageTitle.SEARCH.value))
                     listItems.add(SearchListItem(SearchListType.QUERY, msg.obj as String))
                     updateList(listItems)
                 }
-
-
             }
         }
     }
