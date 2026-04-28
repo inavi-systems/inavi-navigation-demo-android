@@ -3,7 +3,6 @@
 Android 플랫폼에서 아이나비 에어를 사용하기 위한 Demo 프로젝트
 
 ### 개발 가이드
-- https://inavinavigation-android.gitbook.io/sdkguide/
 
 
 ## License
