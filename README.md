@@ -6,16 +6,6 @@ Android 플랫폼에서 아이나비 에어 내비게이션 SDK를 연동하기 
 
 배포 문서: https://inavi-systems.github.io/inavi-navigation-demo-android/
 
-### 개발 환경
-
-- Android Studio
-- Kotlin
-- Android Gradle Plugin: `8.13.2`
-- Kotlin Gradle Plugin: `1.8.22`
-- `compileSdkVersion`: `33`
-- `minSdkVersion`: `23`
-- `targetSdkVersion`: `33`
-- 지원 ABI: `arm64-v8a`, `armeabi-v7a`
 
 ### SDK 저장소
 
@@ -37,7 +27,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.inavisys.navisdk:inavi-navigation-sdk:0.9.1'
+    implementation 'com.inavisys.navisdk:inavi-navigation-sdk:0.9.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 }

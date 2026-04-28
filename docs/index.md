@@ -780,6 +780,29 @@ val bIsShowExtendView = INaviController.getVisibleExtendView()
 INaviController.setVisibleExtendView(true)
 ```
 
+<figure style="text-align: center; margin: 24px 0;">
+    <img
+        src="/images/extendview_horizontal.png"
+        alt="확대도 표출 사양 가로모드"
+        style="display: block; width: min(100%, 720px); height: auto; margin: 0 auto;"
+    />
+    <figcaption style="margin-top: 8px; font-size: 14px; color: #666; text-align: center;">
+        확대도 표출 사양 (가로모드)
+    </figcaption>
+</figure>
+
+<figure style="text-align: center; margin: 24px 0;">
+    <img
+        src="/images/extendview_vertical.png"
+        alt="확대도 표출 사양 세로모드"
+        style="display: block; width: min(100%, 360px); height: auto; margin: 0 auto;"
+    />
+    <figcaption style="margin-top: 8px; font-size: 14px; color: #666; text-align: center;">
+        확대도 표출 사양 (세로모드)
+    </figcaption>
+</figure>
+
+
 ### 12. 현위치에서 진행방향으로 탐색열 가장 가까운 좌표 얻기
 
 ```kotlin
@@ -838,7 +861,16 @@ private fun initBackgroundTBT() {
 }
 ```
 
----
+<figure style="text-align: center; margin: 24px 0;">
+    <img
+        src="/images/bg_tbt.png"
+        alt="Background TBT 표출 예시"
+        style="display: block; width: min(100%, 360px); height: auto; margin: 0 auto;"
+    />
+    <figcaption style="margin-top: 8px; font-size: 14px; color: #666; text-align: center;">
+        Background TBT 표출 예시
+    </figcaption>
+</figure>
 
 ## INaviController Reference
 
