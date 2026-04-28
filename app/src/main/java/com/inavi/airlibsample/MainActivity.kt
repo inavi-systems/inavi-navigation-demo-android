@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.graphics.Typeface
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
@@ -15,6 +16,7 @@ import android.os.Message
 import android.provider.Settings
 import android.view.View
 import android.view.WindowManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +25,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.viewpager.widget.ViewPager
+import com.inavi.airlibsample.adapter.PageTitle
 import com.inavi.airlibsample.adapter.PageDataStore
 import com.inavi.airlibsample.databinding.ActivityMainBinding
 import com.inaviair.sdk.APPSTATUS
@@ -92,6 +95,22 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun runOnMainThread(action: () -> Unit) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            action()
+        } else {
+            runOnUiThread {
+                action()
+            }
+        }
+    }
+
+    private fun showToast(message: String, duration: Int = Toast.LENGTH_LONG) {
+        runOnMainThread {
+            Toast.makeText(this, message, duration).show()
+        }
+    }
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
 
@@ -158,7 +177,7 @@ class MainActivity : AppCompatActivity() {
             if (denyCnt == 0) {
                 initNaviSDK()
             } else {
-                Toast.makeText(this, "권한이 필요합니다.", Toast.LENGTH_LONG).show()
+                showToast("권한이 필요합니다.")
             }
 
         }
@@ -269,7 +288,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onFail(errCode: Int, errMsg: String) {
-                    Toast.makeText(this@MainActivity, "SDK init failed: $errCode", Toast.LENGTH_LONG).show()
+                    showToast("SDK init failed: $errCode")
                     destroyApp()
                     INaviController.destroyNavi()
                     finish()
@@ -288,7 +307,51 @@ class MainActivity : AppCompatActivity() {
         )
 
         mVpPager.adapter = NaviViewPagerAdapter(this, mHandler)
+        initPageTitleBar(binding)
         INaviController.setApplicatonStatus(APPSTATUS.FOREGROUND)
+    }
+
+    private fun initPageTitleBar(binding: ActivityMainBinding) {
+        val titleViews = listOf(
+            binding.tvMapPageTitle,
+            binding.tvSearchPageTitle,
+            binding.tvRoutePageTitle,
+            binding.tvTruckPageTitle
+        )
+        val titles = listOf(
+            PageTitle.MAP.value,
+            PageTitle.SEARCH.value,
+            PageTitle.ROUTE.value,
+            PageTitle.TRUCK.value
+        )
+
+        titleViews.forEachIndexed { index, textView ->
+            textView.text = titles[index]
+            textView.setOnClickListener {
+                mVpPager.setCurrentItem(index, true)
+            }
+        }
+
+        mVpPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageSelected(position: Int) {
+                updatePageTitleBar(titleViews, position)
+            }
+        })
+
+        updatePageTitleBar(titleViews, mVpPager.currentItem)
+    }
+
+    private fun updatePageTitleBar(titleViews: List<TextView>, selectedPosition: Int) {
+        titleViews.forEachIndexed { index, textView ->
+            val selected = index == selectedPosition
+            textView.setTypeface(null, if (selected) Typeface.BOLD else Typeface.NORMAL)
+            textView.setTextColor(
+                ContextCompat.getColor(this, if (selected) R.color.black01 else R.color.gray03)
+            )
+            textView.setBackgroundColor(
+                ContextCompat.getColor(this, if (selected) R.color.gray01 else R.color.white01)
+            )
+        }
     }
 
     private fun getRootPath(): String {
@@ -405,9 +468,7 @@ class MainActivity : AppCompatActivity() {
 
             var fullAddr = INaviController.getFullAddr(lat, lon, true)
 
-            runOnUiThread {
-                Toast.makeText(this@MainActivity, "fullAddr : $fullAddr", Toast.LENGTH_LONG).show()
-            }
+            showToast("fullAddr : $fullAddr")
         }
     }
 
@@ -418,30 +479,30 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 NAVIEVENTTYPE.MAINMENU -> {
-                    Toast.makeText(this@MainActivity, "main menu event", Toast.LENGTH_LONG).show()
+                    showToast("main menu event")
                 }
 
                 NAVIEVENTTYPE.MULTIMENU -> {
-                    Toast.makeText(this@MainActivity, "multi menu event", Toast.LENGTH_LONG).show()
-                    INaviController.drivingRouteZoomMap()
+                    runOnMainThread {
+                        showToast("multi menu event")
+                        INaviController.drivingRouteZoomMap()
+                    }
                 }
 
                 NAVIEVENTTYPE.EXITAPPLICATION -> {
-                    Toast.makeText(this@MainActivity, "exit application event", Toast.LENGTH_LONG)
-                        .show()
+                    showToast("exit application event")
                 }
 
                 NAVIEVENTTYPE.VOLUMEMAPBUTTON -> {
-                    Toast.makeText(this@MainActivity, "volume map button event", Toast.LENGTH_LONG)
-                        .show()
+                    showToast("volume map button event")
                 }
 
                 NAVIEVENTTYPE.CURRRENTPOSITION -> {
-                    Toast.makeText(this@MainActivity, "current position event", Toast.LENGTH_LONG).show()
+                    showToast("current position event")
                 }
 
                 NAVIEVENTTYPE.ALLROUTEVIEW -> {
-                    Toast.makeText(this@MainActivity, "all route view event", Toast.LENGTH_LONG).show()
+                    showToast("all route view event")
                 }
             }
         }
