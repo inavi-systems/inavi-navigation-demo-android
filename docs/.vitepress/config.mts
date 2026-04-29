@@ -3,7 +3,8 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'iNavi Navigation SDK for Android',
   description: 'iNavi Android Navigation SDK Developer Guide',
-  base: '/inavi-navigation-sdk-developer-guide-android/',
+  base: '/inavi-navigation-demo-android/android-developer-guide/',
+  outDir: '.vitepress/dist/android-developer-guide',
   srcExclude: [
     'plans/**'
   ],
@@ -15,7 +16,7 @@ export default defineConfig({
       level: 2
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/inavi-systems/inavi-navigation-sdk-developer-guide-android' }
+      { icon: 'github', link: 'https://github.com/inavi-systems/inavi-navigation-demo-android' }
     ]
   }
 })
