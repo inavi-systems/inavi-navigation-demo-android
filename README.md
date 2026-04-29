@@ -4,7 +4,7 @@ Android 플랫폼에서 아이나비 에어 내비게이션 SDK를 연동하기 
 
 ## 개발 가이드
 
-배포 문서: https://inavi-systems.github.io/inavi-navigation-demo-android/
+배포 문서: https://inavi-systems.github.io/inavi-navigation-sdk-developer-guide-android/
 
 
 ### SDK 저장소
