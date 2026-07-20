@@ -217,6 +217,12 @@ title: iNavi Navigation SDK for Android
 - AGP 7.4.2 적용 (AGP 7.x 계열로 맞추는 것을 권장)
 - 지도 엔진 최신화
 
+### v2.0.0 — 2026-07-20
+- 정식 버전 릴리즈
+- 플러터(Flutter) 플러그인 지원 — Flutter 앱에서 플러그인을 통해 SDK 연동 가능
+- 내부 모듈 안정성 강화
+- 지도 엔진 최신화
+
 ---
 
 ## 개요
@@ -258,7 +264,7 @@ allprojects {
 // App build.gradle
 dependencies {
     // SDK 의존성
-    implementation 'com.inavisys.navisdk:inavi-navigation-sdk:0.9.0'
+    implementation 'com.inavisys.navisdk:inavi-navigation-sdk:2.0.0'
 
     // SDK가 사용하는 Library 의존성
     implementation 'com.google.code.gson:gson:2.8.5'
@@ -336,6 +342,59 @@ android {
 ```
 
 **AppKey 등록:**
+
+AppKey는 발급받은 자격증명이므로 소스에 하드코딩해 커밋하면 유출 위험이 있습니다. 아래 두 가지 방식 중 하나를 선택하세요.
+
+#### 방식 A. `local.properties` 사용 <Badge type="tip" text="권장" />
+
+AppKey를 VCS에 커밋하지 않는 방식입니다. `local.properties`는 Android 표준 `.gitignore` 대상이라 안전합니다.
+
+1. `local.properties`에 AppKey를 추가합니다. (이 파일은 커밋하지 않습니다)
+
+```properties
+# local.properties
+NAVI_SDK_APP_KEY=발급받은_AppKey
+```
+
+> 신규 개발자 온보딩용으로 `local.properties.template`을 커밋해 두고, 각자 복사해 값을 채우도록 안내하면 편리합니다.
+> ```bash
+> cp local.properties.template local.properties
+> ```
+
+2. `App build.gradle`에서 값을 읽어 `manifestPlaceholders`로 주입합니다.
+
+```groovy
+// App build.gradle (android 블록 위)
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { localProperties.load(it) }
+}
+def naviSdkAppKey = localProperties.getProperty('NAVI_SDK_APP_KEY', '')
+
+android {
+    defaultConfig {
+        // AndroidManifest 의 ${naviSdkAppKey} 치환값 주입
+        manifestPlaceholders = [naviSdkAppKey: naviSdkAppKey]
+    }
+}
+```
+
+3. `AndroidManifest.xml`은 placeholder만 참조합니다.
+
+```xml
+<manifest>
+    <application>
+        <meta-data
+            android:name="com.inaviair.sdk.appkey"
+            android:value="${naviSdkAppKey}"/>
+    </application>
+</manifest>
+```
+
+#### 방식 B. `AndroidManifest.xml`에 직접 입력 (간편)
+
+빠른 테스트·예제용으로 간편하지만, AppKey가 VCS에 그대로 커밋되므로 실서비스·공개 저장소에는 권장하지 않습니다.
 
 ```xml
 <manifest>

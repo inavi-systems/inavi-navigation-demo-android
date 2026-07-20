@@ -27,7 +27,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.inavisys.navisdk:inavi-navigation-sdk:0.9.0'
+    implementation 'com.inavisys.navisdk:inavi-navigation-sdk:2.0.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 }
