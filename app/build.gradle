@@ -3,6 +3,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 
+// local.properties 에서 민감정보(SDK App Key) 로드 — 커밋 금지 대상
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { localProperties.load(it) }
+}
+def naviSdkAppKey = localProperties.getProperty('NAVI_SDK_APP_KEY', '')
+
 android {
     namespace = 'com.inavi.airlibsample'
 
@@ -23,6 +31,9 @@ android {
         ndk {
             abiFilters "arm64-v8a", "armeabi-v7a"
         }
+
+        // AndroidManifest 의 ${naviSdkAppKey} 치환값 주입
+        manifestPlaceholders = [naviSdkAppKey: naviSdkAppKey]
 
     }
     buildTypes {
@@ -59,7 +70,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
     // iNaviAir SDK 의존성 추가
-    implementation 'com.inavisys.navisdk:inavi-navigation-sdk:0.9.1'
+    implementation 'com.inavisys.navisdk:inavi-navigation-sdk:2.0.0'
     // SDK 가 사용하는 Library 추가
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.android.gms:play-services-location:21.0.1'

@@ -1,0 +1,13 @@
+# local.properties 예시 파일
+#
+# 이 파일을 복사해 local.properties 로 만들고 값을 채우세요.
+#   cp local.properties.template local.properties
+#
+# local.properties 는 .gitignore 대상이며, 절대 커밋하지 마세요.
+# (민감정보인 AppKey 유출 방지)
+
+# Android SDK 경로 (Android Studio 가 자동 생성)
+sdk.dir=/path/to/your/Android/sdk
+
+# iNavi NaviSDK AppKey — 제휴 사업 담당자를 통해 발급받은 값 입력
+NAVI_SDK_APP_KEY=YOUR_APP_KEY_HERE
