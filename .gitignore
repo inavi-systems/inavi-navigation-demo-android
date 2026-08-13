@@ -15,5 +15,6 @@
 .idea
 node_modules
 docs/plans
+docs/internal
 docs/.vitepress/cache
 docs/.vitepress/dist

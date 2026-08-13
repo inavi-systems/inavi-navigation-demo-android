@@ -6,7 +6,8 @@ export default defineConfig({
   base: '/inavi-navigation-demo-android/android-developer-guide/',
   outDir: '.vitepress/dist/android-developer-guide',
   srcExclude: [
-    'plans/**'
+    'plans/**',
+    'internal/**'
   ],
   themeConfig: {
     nav: [
