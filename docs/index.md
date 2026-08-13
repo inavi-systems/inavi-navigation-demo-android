@@ -223,6 +223,10 @@ title: iNavi Navigation SDK for Android
 - 내부 모듈 안정성 강화
 - 지도 엔진 최신화
 
+### v2.0.1 — 2026-07-24
+- 내부 안정성 개선
+- I/F 변경 없음 — `2.0.0`에서 의존성 버전만 변경하면 됩니다
+
 ---
 
 ## 개요
@@ -264,7 +268,7 @@ allprojects {
 // App build.gradle
 dependencies {
     // SDK 의존성
-    implementation 'com.inavisys.navisdk:inavi-navigation-sdk:2.0.0'
+    implementation 'com.inavisys.navisdk:inavi-navigation-sdk:2.0.1'
 
     // SDK가 사용하는 Library 의존성
     implementation 'com.google.code.gson:gson:2.8.5'
