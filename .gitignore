@@ -13,6 +13,7 @@
 .externalNativeBuild
 .cxx
 .idea
+.claude
 node_modules
 docs/plans
 docs/internal
