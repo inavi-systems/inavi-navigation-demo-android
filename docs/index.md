@@ -225,7 +225,6 @@ title: iNavi Navigation SDK for Android
 
 ### v2.0.1 — 2026-07-24
 - 내부 안정성 개선
-- I/F 변경 없음 — `2.0.0`에서 의존성 버전만 변경하면 됩니다
 
 ---
 
